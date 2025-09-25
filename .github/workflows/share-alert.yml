@@ -1,0 +1,44 @@
+name: Share Alert Cron Job
+
+on:
+  schedule:
+    # Run every 2 days at midnight UTC (6:00 AM Nepal Time)
+    - cron: '0 0 */2 * *'
+
+jobs:
+  check-ipos:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+        bundler-cache: false
+    
+    - name: Install dependencies
+      run: |
+        bundle config set frozen false
+        bundle install
+    
+    - name: Create .env file
+      run: |
+        echo "BREVO_USERNAME=${{ secrets.BREVO_USERNAME }}" >> .env
+        echo "BREVO_PASSWORD=${{ secrets.BREVO_PASSWORD }}" >> .env
+        echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
+    
+    - name: Run Share Alert
+      run: ruby main.rb
+      
+    - name: Upload logs (if needed)
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: share-alert-logs
+        path: |
+          *.log
+          logs/
+        retention-days: 7
