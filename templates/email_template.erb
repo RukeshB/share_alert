@@ -1,0 +1,85 @@
+<html>
+  <body style="font-family: Arial, sans-serif; background:#f9f9f9; padding:20px;">
+    <div style="max-width:700px; margin:auto; background:#fff; padding:20px; border-radius:8px;">
+      <h2 style="color:#0052cc; text-align:center;">📢 IPO & Right Share Updates</h2>
+
+      <!-- IPO Table -->
+      <h3 style="color:#333;">Open IPOs</h3>
+      <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <thead>
+          <tr style="background:#0052cc; color:#fff;">
+            <th style="padding:8px; border:1px solid #ddd;">Company</th>
+            <th style="padding:8px; border:1px solid #ddd;">Units</th>
+            <th style="padding:8px; border:1px solid #ddd;">Price</th>
+            <th style="padding:8px; border:1px solid #ddd;">Open Date</th>
+            <th style="padding:8px; border:1px solid #ddd;">Close Date</th>
+            <th style="padding:8px; border:1px solid #ddd;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if ipo_data && ipo_data.any? %>
+            <% ipo_data.each do |d| %>
+              <% 
+                data = d.with_indifferent_access
+                status = (data['Status'] || '').to_s.downcase
+                row_style = status.include?('closed') ? 'background-color:#ffebee; color:#c62828;' : ''
+              %>
+              <tr style="<%= row_style %>">
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Company'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Units'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Price'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Opening Date'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Closing Date'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Status'] || 'N/A' %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" style="padding:8px; border:1px solid #ddd; text-align:center;">No IPOs found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <!-- Right Shares Table -->
+      <h3 style="color:#333; margin-top:30px;">Open Right Shares</h3>
+      <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <thead>
+          <tr style="background:#28a745; color:#fff;">
+            <th style="padding:8px; border:1px solid #ddd;">Company</th>
+            <th style="padding:8px; border:1px solid #ddd;">Ratio</th>
+            <th style="padding:8px; border:1px solid #ddd;">Open Date</th>
+            <th style="padding:8px; border:1px solid #ddd;">Close Date</th>
+            <th style="padding:8px; border:1px solid #ddd;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if right_data && right_data.any? %>
+            <% right_data.each do |d| %>
+              <% 
+                data = d.with_indifferent_access
+                status = (data['Status'] || '').to_s.downcase
+                row_style = status.include?('closed') ? 'background-color:#ffebee; color:#c62828;' : ''
+              %>
+              <tr style="<%= row_style %>">
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Company'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Ratio'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Opening Date'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Closing Date'] || 'N/A' %></td>
+                <td style="padding:8px; border:1px solid #ddd;"><%= data['Status'] || 'N/A' %></td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="5" style="padding:8px; border:1px solid #ddd; text-align:center;">No Right Shares found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <p style="font-size:12px; color:#555; margin-top:20px;">
+        This is an automated alert from your ShareSansar scraper.
+      </p>
+    </div>
+  </body>
+</html>
