@@ -29,6 +29,7 @@ jobs:
         echo "BREVO_USERNAME=${{ secrets.BREVO_USERNAME }}" >> .env
         echo "BREVO_PASSWORD=${{ secrets.BREVO_PASSWORD }}" >> .env
         echo "FROM_EMAIL=${{ secrets.FROM_EMAIL }}" >> .env
+        echo "TO_EMAILS=${{ secrets.TO_EMAILS }}" >> .env
     
     - name: Run Share Alert
       run: ruby main.rb

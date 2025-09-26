@@ -6,8 +6,10 @@ A Ruby application that scrapes ShareSansar.com for IPO and Right Share informat
 
 - 📈 Scrapes IPO data from ShareSansar.com
 - 📧 Sends beautiful HTML email notifications via Brevo SMTP
-- 🔒 Secure credential management with environment variables
+- � **Multiple email recipients** support
+- �🔒 Secure credential management with environment variables
 - 📊 Professional email template with table formatting
+- ⚡ Automated scheduling via GitHub Actions
 
 ## Local Setup
 
@@ -22,12 +24,38 @@ A Ruby application that scrapes ShareSansar.com for IPO and Right Share informat
    BREVO_USERNAME=your_brevo_username
    BREVO_PASSWORD=your_brevo_password
    FROM_EMAIL=your_sender_email
+   TO_EMAILS=recipient1@gmail.com,recipient2@gmail.com,recipient3@gmail.com
    ```
+   
+   **Multiple Recipients:**
+   - **Single email**: `TO_EMAILS=user@gmail.com`
+   - **Multiple emails**: `TO_EMAILS=user1@gmail.com,user2@gmail.com,user3@gmail.com`
+   - **No spaces** around commas
 
 3. **Run the application:**
    ```bash
    ruby main.rb
    ```
+
+## 👥 Multiple Email Recipients
+
+The application supports sending alerts to multiple email addresses:
+
+- **Configure in `.env`**: `TO_EMAILS=email1@gmail.com,email2@gmail.com,email3@gmail.com`
+- **Individual delivery**: Each recipient gets their own email
+- **Error handling**: Continues sending if one email fails
+- **Progress tracking**: Shows success/failure for each recipient
+- **Summary report**: Displays final delivery statistics
+
+**Example Output:**
+```
+📧 Preparing to send email to 3 recipient(s)
+📤 Sending to: user1@gmail.com
+✅ Email sent successfully to user1@gmail.com!
+📤 Sending to: user2@gmail.com
+✅ Email sent successfully to user2@gmail.com!
+📊 Summary: 3/3 emails sent successfully
+```
 
 ## GitHub Actions Setup (Automated Cron Job)
 
@@ -41,11 +69,12 @@ To run this automatically on GitHub Actions:
      - `BREVO_USERNAME`: Your Brevo SMTP username
      - `BREVO_PASSWORD`: Your Brevo SMTP password
      - `FROM_EMAIL`: Your sender email address
+     - `TO_EMAILS`: Comma-separated recipient emails (e.g., `user1@gmail.com,user2@gmail.com`)
 
 3. **Configure the schedule:**
    - Edit `.github/workflows/share-alert.yml`
    - Modify the cron expression to your preferred time
-   - Current setting: `*/5 * * * *` (every 5 minutes)
+   - Current setting: `0 0 */2 * *` (every 2 days at midnight UTC)
 
 4. **Manual trigger:**
    - Go to Actions tab in your GitHub repository
@@ -54,6 +83,9 @@ To run this automatically on GitHub Actions:
 
 ### Cron Schedule Examples:
 ```yaml
+# Every 2 days at midnight UTC (current)
+- cron: '0 0 */2 * *'
+
 # Every day at 9 AM UTC
 - cron: '0 9 * * *'
 

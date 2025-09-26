@@ -7,17 +7,18 @@ require_relative 'share_sansar_scraper'
 Dotenv.load('.env')
 
 # Validate required environment variables
-required_vars = ['BREVO_USERNAME', 'BREVO_PASSWORD', 'FROM_EMAIL']
+required_vars = %w[BREVO_USERNAME BREVO_PASSWORD FROM_EMAIL TO_EMAILS]
 missing_vars = required_vars.select { |var| ENV[var].nil? || ENV[var].empty? }
 
 if missing_vars.any?
   puts "❌ Missing required environment variables: #{missing_vars.join(', ')}"
-  puts "Please check your .env file"
+  puts 'Please check your .env file'
   exit 1
 end
 
-# Configuration - you can modify this as needed
-RECIPIENT_EMAIL = 'rukeshbasukala@gmail.com'
+# Parse multiple recipient emails from environment variable (comma-separated)
+recipient_emails_string = ENV['TO_EMAILS']
+RECIPIENT_EMAILS = recipient_emails_string.split(',').map(&:strip)
 
 scraper = ShareSansarScraper.new
 
@@ -31,15 +32,15 @@ if ipos.any?
   puts "\n=== Sending Email Notification ==="
   success = Smtp.send_email(
     subject: 'Share Alert - New IPOs Available!',
-    to: RECIPIENT_EMAIL,
+    to: RECIPIENT_EMAILS,
     ipo_data: ipos,
     right_data: []
   )
 
   if success
-    puts '✅ Email sent successfully!'
+    puts '✅ Email notification process completed!'
   else
-    puts '❌ Failed to send email'
+    puts '❌ All email notifications failed'
   end
 else
   puts "\nNo IPOs found, no email sent."
