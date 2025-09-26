@@ -2,8 +2,8 @@ name: Share Alert Cron Job
 
 on:
   schedule:
-    # Run every 2 days at midnight UTC (6:00 AM Nepal Time)
-    - cron: '0 0 */2 * *'
+    # Run every 2 days at midnight UTC (5:00 AM )
+    - cron: '0 5 */2 * *'
 
 jobs:
   check-ipos:
