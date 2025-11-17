@@ -23,15 +23,29 @@ RECIPIENT_EMAILS = recipient_emails_string.split(',').map(&:strip)
 scraper = ShareSansarScraper.new
 
 # Fetch and display IPOs
-ipos = scraper.fetch_open_ipos
-puts '=== IPO Data ==='
-puts ipos
+all_ipos = scraper.fetch_open_ipos
+puts '=== All IPO Data ==='
+puts "Total IPOs found: #{all_ipos.length}"
 
-# Send email notification if IPOs are present
+# Filter out closed IPOs (keep everything else)
+open_upcoming_ipos = all_ipos.reject do |ipo|
+  status = (ipo['Status'] || '').downcase
+  status.include?('closed')
+end
+
+puts "\n=== Filtered IPO Data (Open/Upcoming) ==="
+puts "Open/Upcoming IPOs: #{open_upcoming_ipos.length}"
+open_upcoming_ipos.each_with_index do |ipo, index|
+  puts "#{index + 1}. #{ipo['Company'] || 'N/A'} - Status: #{ipo['Status'] || 'N/A'}"
+end
+
+ipos = open_upcoming_ipos
+
+# Send email notification if open/upcoming IPOs are present
 if ipos.any?
   puts "\n=== Sending Email Notification ==="
   success = Smtp.send_email(
-    subject: 'Share Alert - New IPOs Available!',
+    subject: "🚨 IPO Alert - #{ipos.length} Open/Upcoming IPOs Available!",
     to: RECIPIENT_EMAILS,
     ipo_data: ipos,
     right_data: []
@@ -43,5 +57,5 @@ if ipos.any?
     puts '❌ All email notifications failed'
   end
 else
-  puts "\nNo IPOs found, no email sent."
+  puts "\nNo open or upcoming IPOs found, no email sent."
 end

@@ -22,7 +22,7 @@ class Smtp
   def self.send_email(subject:, to:, ipo_data:, right_data:)
     # Handle both single email and multiple emails
     recipients = to.is_a?(Array) ? to : [to]
-    
+
     # Validate inputs
     if recipients.empty? || recipients.any? { |email| email.nil? || email.strip.empty? }
       puts '❌ Error: Valid recipient email(s) required'
@@ -44,10 +44,10 @@ class Smtp
     html_content = renderer.result(binding)
 
     success_count = 0
-    
+
     recipients.each do |recipient_email|
       puts "📤 Sending to: #{recipient_email}"
-      
+
       begin
         mail = Mail.new do
           from    ENV['FROM_EMAIL']
@@ -67,8 +67,8 @@ class Smtp
         puts "Error details: #{e.backtrace.first(3)}"
       end
     end
-    
+
     puts "📊 Summary: #{success_count}/#{recipients.length} emails sent successfully"
-    success_count > 0  # Return true if at least one email was sent
+    success_count > 0 # Return true if at least one email was sent
   end
 end
