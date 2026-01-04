@@ -41,41 +41,29 @@
         </tbody>
       </table>
 
-      <!-- Right Shares Table -->
-      <h3 style="color:#333; margin-top:30px;">Open Right Shares</h3>
-      <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-        <thead>
-          <tr style="background:#28a745; color:#fff;">
-            <th style="padding:8px; border:1px solid #ddd;">Company</th>
-            <th style="padding:8px; border:1px solid #ddd;">Ratio</th>
-            <th style="padding:8px; border:1px solid #ddd;">Open Date</th>
-            <th style="padding:8px; border:1px solid #ddd;">Close Date</th>
-            <th style="padding:8px; border:1px solid #ddd;">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% if right_data && right_data.any? %>
-            <% right_data.each do |d| %>
-              <% 
-                data = d.with_indifferent_access
-                status = (data['Status'] || '').to_s.downcase
-                row_style = status.include?('closed') ? 'background-color:#ffebee; color:#c62828;' : ''
-              %>
-              <tr style="<%= row_style %>">
-                <td style="padding:8px; border:1px solid #ddd;"><%= data['Company'] || 'N/A' %></td>
-                <td style="padding:8px; border:1px solid #ddd;"><%= data['Ratio'] || 'N/A' %></td>
-                <td style="padding:8px; border:1px solid #ddd;"><%= data['Opening Date'] || 'N/A' %></td>
-                <td style="padding:8px; border:1px solid #ddd;"><%= data['Closing Date'] || 'N/A' %></td>
-                <td style="padding:8px; border:1px solid #ddd;"><%= data['Status'] || 'N/A' %></td>
-              </tr>
-            <% end %>
-          <% else %>
-            <tr>
-              <td colspan="5" style="padding:8px; border:1px solid #ddd; text-align:center;">No Right Shares found</td>
-            </tr>
+      <!-- Financial News Section -->
+      <h3 style="color:#333; margin-top:30px;">Financial News</h3>
+      <div style="border:1px solid #ddd; border-radius:5px; margin-top:10px;">
+        <% if news_data && news_data.any? %>
+          <% news_data.each_with_index do |d, index| %>
+            <% 
+              data = d.with_indifferent_access
+              border_style = index == news_data.length - 1 ? '' : 'border-bottom:1px solid #eee;'
+            %>
+            <div style="padding:12px; <%= border_style %>">
+              <% if data['Link'] %>
+                <a href="<%= data['Link'] %>" style="color:#0052cc; text-decoration:none; font-weight:500;"><%= data['Title'] || 'N/A' %></a>
+              <% else %>
+                <span style="font-weight:500;"><%= data['Title'] || 'N/A' %></span>
+              <% end %>
+            </div>
           <% end %>
-        </tbody>
-      </table>
+        <% else %>
+          <div style="padding:20px; text-align:center; color:#666; font-style:italic;">
+            No Financial News found
+          </div>
+        <% end %>
+      </div>
 
       <p style="font-size:12px; color:#555; margin-top:20px;">
         This is an automated alert from your ShareSansar scraper.

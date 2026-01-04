@@ -1,4 +1,5 @@
 require 'httparty'
+require 'pry'
 require 'nokogiri'
 require 'dotenv'
 require_relative 'share_sansar_scraper'
@@ -39,16 +40,37 @@ open_upcoming_ipos.each_with_index do |ipo, index|
   puts "#{index + 1}. #{ipo['Company'] || 'N/A'} - Status: #{ipo['Status'] || 'N/A'}"
 end
 
+# Fetch financial news
+puts "\n" + '=' * 50
+puts '=== Fetching Financial News ==='
+puts '=' * 50
+
+news_data = scraper.fetch_financial_news
+
+p news_data
+
+puts "\n=== Financial News Titles ==="
+puts "Found #{news_data.length} financial news articles"
+news_data.each_with_index do |item, index|
+  puts "#{index + 1}. #{item['Title']}"
+end
+
 ipos = open_upcoming_ipos
 
-# Send email notification if open/upcoming IPOs are present
-if ipos.any?
+# Send email notification if open/upcoming IPOs or financial news are present
+if ipos.any? || news_data.any?
   puts "\n=== Sending Email Notification ==="
+
+  subject_parts = []
+  subject_parts << "#{ipos.length} Open/Upcoming IPOs" if ipos.any?
+  subject_parts << "#{news_data.length} Financial News" if news_data.any?
+  subject = "🚨 Stock Alert - #{subject_parts.join(' & ')} Available!"
+
   success = Smtp.send_email(
-    subject: "🚨 IPO Alert - #{ipos.length} Open/Upcoming IPOs Available!",
+    subject: subject,
     to: RECIPIENT_EMAILS,
     ipo_data: ipos,
-    right_data: []
+    news_data: news_data
   )
 
   if success
@@ -57,5 +79,5 @@ if ipos.any?
     puts '❌ All email notifications failed'
   end
 else
-  puts "\nNo open or upcoming IPOs found, no email sent."
+  puts "\nNo open IPOs or financial news found, no email sent."
 end

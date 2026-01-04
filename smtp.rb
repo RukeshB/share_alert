@@ -19,7 +19,7 @@ Mail.defaults do
 end
 
 class Smtp
-  def self.send_email(subject:, to:, ipo_data:, right_data:)
+  def self.send_email(subject:, to:, ipo_data:, news_data:)
     # Handle both single email and multiple emails
     recipients = to.is_a?(Array) ? to : [to]
 
@@ -37,7 +37,7 @@ class Smtp
     puts "📧 Preparing to send email to #{recipients.length} recipient(s)"
     puts "📋 Subject: #{subject}"
     puts "📊 IPO data count: #{ipo_data&.length || 0}"
-    puts "🔄 Right share data count: #{right_data&.length || 0}"
+    puts "� Financial news data count: #{news_data&.length || 0}"
 
     template = File.read('templates/email_template.erb')
     renderer = ERB.new(template)
