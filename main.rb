@@ -1,5 +1,4 @@
 require 'httparty'
-require 'pry'
 require 'nokogiri'
 require 'dotenv'
 require_relative 'share_sansar_scraper'
