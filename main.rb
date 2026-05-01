@@ -27,10 +27,13 @@ all_ipos = scraper.fetch_open_ipos
 puts '=== All IPO Data ==='
 puts "Total IPOs found: #{all_ipos.length}"
 
-# Filter out closed IPOs (keep everything else)
+# Filter out closed IPOs and those with 'Coming Soon' open and close dates
 open_upcoming_ipos = all_ipos.reject do |ipo|
   status = (ipo['Status'] || '').downcase
-  status.include?('closed')
+  open_date = (ipo['Opening Date'] || '').downcase
+  close_date = (ipo['Closing Date'] || '').downcase
+
+  status.include?('closed') || (open_date.include?('coming soon') && close_date.include?('coming soon'))
 end
 
 puts "\n=== Filtered IPO Data (Open/Upcoming) ==="
