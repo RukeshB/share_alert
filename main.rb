@@ -59,8 +59,8 @@ end
 
 ipos = open_upcoming_ipos
 
-# Send email notification if open/upcoming IPOs or financial news are present
-if ipos.any? || news_data.any?
+# Send email notification if open/upcoming IPOs
+if ipos.any?
   puts "\n=== Sending Email Notification ==="
 
   subject_parts = []
